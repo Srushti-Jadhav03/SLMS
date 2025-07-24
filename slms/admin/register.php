@@ -1,0 +1,130 @@
+<?php include('inc/head.php'); ?>
+<body>
+	<nav class="navbar navbar-toggleable-sm navbar-inverse bg-inverse p-0">
+		<div class="container">
+			<button class="navbar-toggler toggler-right" data-target="#mynavbar" data-toggle="collapse">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<a href="index.php" class="navbar-brand mr-3">Student Leave Management System</a>
+			
+		</div>
+	</nav>
+	<!--Header-->
+	<header id="main-header" class="bg-danger py-2 text-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<h1><i class="fa fa-user-secret"></i>Faculty Registration</h1>
+				</div>
+			</div>
+		</div>
+	</header>
+	<!--Section-->
+	<section id="sections" class="py-4 mb-4 bg-faded">
+		<div class="container">
+			<div class="row">
+				
+				
+			</div>
+		</div>
+
+	</section>
+
+	<section id="post">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 offset-md-3">
+					<div class="card">
+						<div class="card-header">
+							<h5>Register</h5>
+						</div>
+						<div class="card-body p-3">
+							<form action="" method="POST">
+								<label class="form-control-label">ID</label>
+								<input type="text" name="id" class="form-control"  />
+								<br />
+								<label class="form-control-label">Name</label>
+								<input type="text" name="name" class="form-control"  />
+								<br />
+								<label class="form-control-label">Class</label>
+								<input type="text" name="class" class="form-control"  />
+								<br />
+								<label class="form-control-label">Email</label>
+								<input type="email" name="email" class="form-control"  />
+								<br />
+								<label class="form-control-label">Enter your Password</label>
+								<input type="password" name="password" class="form-control"  />
+								<br />
+								<input type="submit" name="submit" style="border-radius:0%;" class="btn btn-success" value="Register" />
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<br><br><br><br><br><br><br><br><br>
+	<!----Section3 footer ---->
+	<section id="main-footer" class="text-center text-white bg-inverse mt-4 p-4">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+				<p class="lead">&copy; <?php echo date("Y")?> CSBS</p>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+  
+  <script src="js/jquery.min.js"></script>
+  <script src="js/tether.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="https://cdn.ckeditor.com/4.9.1/standard/ckeditor.js"></script>
+  <script>
+	CKEDITOR.replace('editor1');
+  </script>
+
+</body>
+</html>
+<?php 
+	
+	if(isset($_POST['submit'])){
+		$user = $_POST['email'];
+		$password = $_POST['password'];
+		$id = $_POST['id'];
+		$name = $_POST['name'];
+		$class = $_POST['class'];
+
+		
+		include 'inc/config.php';
+
+		$check_email_sql = "SELECT * FROM faculty WHERE email = '$user' and password = '$password'";
+		$check_email_run = mysqli_query($con, $check_email_sql);
+		$check_email = mysqli_num_rows($check_email_run);
+
+		if($check_email > 0){
+			echo "<script> 
+				alert('Email already exists. Please choose a different email.');
+				window.open('register.php','_self');
+				</script>";
+		} else {
+			$insert_sql = "INSERT INTO faculty (id, name, class, email, password) VALUES ('$id', '$name', '$class', '$user', '$password')";
+			$insert_run = mysqli_query($con, $insert_sql);
+
+			if($insert_run){
+				session_start();
+				$_SESSION['email'] = $user; 
+				echo "<script> 
+						alert('Registration successful. You are now logged in.');
+						window.open('dashboard.php','_self');
+					  </script>";
+			} else {
+				echo "<script> 
+					alert('Registration failed. Please try again.');
+					window.open('register.php','_self');
+					</script>";
+	}
+}
+	}
+
+ ?>
